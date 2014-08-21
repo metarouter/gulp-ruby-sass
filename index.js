@@ -93,9 +93,14 @@ module.exports = function (options) {
 			'bundleExec',
 			'watch',
 			'poll',
-			'sourcemapPath',
-			'container'
+			'container',
+			'sourcemap',
+			'sourcemapPath'
 		]);
+
+		if (options.sourcemap) {
+			args.push('--sourcemap=' + options.sourcemap);
+		}
 
 		if (options.bundleExec) {
 			command = 'bundle';
@@ -145,7 +150,7 @@ module.exports = function (options) {
 		});
 
 		sass.on('close', function (code) {
-			if (options.sourcemap && options.sourcemapPath) {
+			if (options.sourcemap === 'file' && options.sourcemapPath) {
 				rewriteSourcemapPaths(compileDir, options.sourcemapPath, function (err) {
 					if (err) {
 						stream.emit('error', createErr(err));
